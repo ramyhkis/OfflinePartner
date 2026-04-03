@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
+  <reporter-output>
+  </reporter-output>
+  <suite started-at="2026-04-03T15:15:39 IST" name="Default suite" finished-at="2026-04-03T15:15:50 IST" duration-ms="10801">
+    <groups>
+    </groups>
+    <test started-at="2026-04-03T15:15:39 IST" name="Default test" finished-at="2026-04-03T15:15:50 IST" duration-ms="10801">
+      <class name="com.base.BaseTest">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.base.BaseTest@74e52ef6]" started-at="2026-04-03T15:15:39 IST" name="setup" finished-at="2026-04-03T15:15:46 IST" duration-ms="7393" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- setup -->
+        <test-method signature="makePartnersOffline()[pri:1, instance:com.base.BaseTest@74e52ef6]" started-at="2026-04-03T15:15:46 IST" name="makePartnersOffline" finished-at="2026-04-03T15:15:49 IST" duration-ms="3116" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- makePartnersOffline -->
+        <test-method is-config="true" signature="teardown()[pri:0, instance:com.base.BaseTest@74e52ef6]" started-at="2026-04-03T15:15:49 IST" name="teardown" finished-at="2026-04-03T15:15:50 IST" duration-ms="247" status="PASS">
+          <reporter-output>
+          </reporter-output>
+        </test-method> <!-- teardown -->
+      </class> <!-- com.base.BaseTest -->
+    </test> <!-- Default test -->
+  </suite> <!-- Default suite -->
+</testng-results>
