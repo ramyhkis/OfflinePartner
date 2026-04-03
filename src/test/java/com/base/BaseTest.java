@@ -43,14 +43,16 @@ public class BaseTest {
         ChromeOptions options = new ChromeOptions();
         String headless = prop.getProperty("headless");
 
-        if (headless.equalsIgnoreCase("true")) {
-            options.addArguments("--headless=new");
-            options.addArguments("--window-size=1920,1080");
-            options.addArguments("--disable-gpu");
-            options.addArguments("--no-sandbox");
-            options.addArguments("--disable-dev-shm-usage");
-            options.addArguments("--force-device-scale-factor=1");
-        }
+        // if (headless.equalsIgnoreCase("true")) {
+        options.addArguments("--headless=new");
+        options.addArguments("--window-size=1920,1080");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--force-device-scale-factor=1");
+        options.addArguments("--remote-allow-origins=*");
+        // }
+        System.out.println("Launching browser...");
 
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver(options);
