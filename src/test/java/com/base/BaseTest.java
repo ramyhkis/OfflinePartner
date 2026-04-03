@@ -19,6 +19,8 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import io.github.bonigarcia.wdm.WebDriverManager;
+
 public class BaseTest {
 
     WebDriver driver;
@@ -50,6 +52,7 @@ public class BaseTest {
             options.addArguments("--force-device-scale-factor=1");
         }
 
+        WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver(options);
 
         if (!headless.equalsIgnoreCase("true")) {
