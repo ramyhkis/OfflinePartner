@@ -2,20 +2,20 @@
 <testng-results ignored="0" total="1" passed="1" failed="0" skipped="0">
   <reporter-output>
   </reporter-output>
-  <suite started-at="2026-04-03T16:00:02 IST" name="Surefire suite" finished-at="2026-04-03T16:00:24 IST" duration-ms="21803">
+  <suite started-at="2026-04-03T16:06:28 IST" name="Surefire suite" finished-at="2026-04-03T16:06:41 IST" duration-ms="13112">
     <groups>
     </groups>
-    <test started-at="2026-04-03T16:00:02 IST" name="Surefire test" finished-at="2026-04-03T16:00:24 IST" duration-ms="21803">
+    <test started-at="2026-04-03T16:06:28 IST" name="Surefire test" finished-at="2026-04-03T16:06:41 IST" duration-ms="13112">
       <class name="com.base.BaseTest">
-        <test-method is-config="true" signature="setup()[pri:0, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:00:02 IST" name="setup" finished-at="2026-04-03T16:00:20 IST" duration-ms="18534" status="PASS">
+        <test-method is-config="true" signature="setup()[pri:0, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:06:28 IST" name="setup" finished-at="2026-04-03T16:06:38 IST" duration-ms="9762" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- setup -->
-        <test-method signature="makePartnersOffline()[pri:1, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:00:20 IST" name="makePartnersOffline" finished-at="2026-04-03T16:00:23 IST" duration-ms="2939" status="PASS">
+        <test-method signature="makePartnersOffline()[pri:0, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:06:38 IST" name="makePartnersOffline" finished-at="2026-04-03T16:06:41 IST" duration-ms="2936" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- makePartnersOffline -->
-        <test-method is-config="true" signature="teardown()[pri:0, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:00:23 IST" name="teardown" finished-at="2026-04-03T16:00:24 IST" duration-ms="277" status="PASS">
+        <test-method is-config="true" signature="teardown()[pri:0, instance:com.base.BaseTest@cd3fee8]" started-at="2026-04-03T16:06:41 IST" name="teardown" finished-at="2026-04-03T16:06:41 IST" duration-ms="368" status="PASS">
           <reporter-output>
           </reporter-output>
         </test-method> <!-- teardown -->

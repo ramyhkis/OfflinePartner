@@ -1,14 +1,12 @@
 package com.base;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.Properties;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
@@ -24,14 +22,11 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class BaseTest {
 
     WebDriver driver;
-    Support support;
     Properties prop;
     WebDriverWait wait;
 
     @BeforeTest
     public void setup() throws IOException {
-
-        support = new Support();
 
         // ---------- LOAD CONFIG ----------
         prop = new Properties();
@@ -40,10 +35,10 @@ public class BaseTest {
         prop.load(fis);
 
         // ---------- HEADLESS CONFIG ----------
-        ChromeOptions options = new ChromeOptions();
-        String headless = prop.getProperty("headless");
+        String headless = System.getProperty("headless", prop.getProperty("headless"));
 
-        // if (headless.equalsIgnoreCase("true")) {
+        ChromeOptions options = new ChromeOptions();
+
         options.addArguments("--headless=new");
         options.addArguments("--window-size=1920,1080");
         options.addArguments("--disable-gpu");
@@ -51,8 +46,8 @@ public class BaseTest {
         options.addArguments("--disable-dev-shm-usage");
         options.addArguments("--force-device-scale-factor=1");
         options.addArguments("--remote-allow-origins=*");
-        // }
-        System.out.println("Launching browser...");
+
+        System.out.println("🚀 Launching browser...");
 
         WebDriverManager.chromedriver().setup();
         driver = new ChromeDriver(options);
@@ -61,27 +56,37 @@ public class BaseTest {
             driver.manage().window().maximize();
         }
 
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
-        wait = new WebDriverWait(driver, Duration.ofSeconds(20));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(40));
 
+        // ---------- OPEN URL ----------
         driver.get("https://uat-adm.drop-it.co/login");
 
+        // ---------- DEBUG LOGS ----------
+        System.out.println("URL: " + driver.getCurrentUrl());
+        System.out.println("Title: " + driver.getTitle());
+
+        // ---------- WAIT FOR PAGE LOAD ----------
+        wait.until(driver -> ((JavascriptExecutor) driver)
+                .executeScript("return document.readyState").equals("complete"));
+
         // ---------- LOGIN ----------
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("email")))
+        wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//input[@id='email']")))
                 .sendKeys(prop.getProperty("UserName"));
 
-        driver.findElement(By.id("password"))
+        driver.findElement(By.xpath("//input[@id='password']"))
                 .sendKeys(prop.getProperty("Password"));
 
         driver.findElement(By.xpath("//button[normalize-space()='Login']")).click();
 
-        // Wait for dashboard
+        // ---------- WAIT FOR DASHBOARD ----------
         wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//button[@aria-label='open drawer']")));
+
+        System.out.println("✅ Login successful");
     }
 
-    @Test(priority = 1)
-    public void makePartnersOffline() throws InterruptedException {
+    @Test
+    public void makePartnersOffline() throws Exception {
 
         JavascriptExecutor js = (JavascriptExecutor) driver;
 
@@ -95,7 +100,6 @@ public class BaseTest {
         wait.until(ExpectedConditions.elementToBeClickable(
                 By.xpath("//h6[normalize-space()='Partners (Online)']"))).click();
 
-        // Wait for table load
         wait.until(ExpectedConditions.presenceOfElementLocated(
                 By.xpath("//table/tbody/tr")));
 
@@ -103,53 +107,48 @@ public class BaseTest {
 
         for (int i = 1; i <= num; i++) {
 
-            // ---- WAIT FOR TABLE CONTAINER ----
             WebElement tableContainer = wait.until(
                     ExpectedConditions.presenceOfElementLocated(
-                            By.xpath("//div[contains(@class,'MuiTableContainer')]")
-                    )
-            );
+                            By.xpath("//div[contains(@class,'MuiTableContainer')]")));
 
-            // ✅ STEP 1: SCROLL FULL RIGHT FIRST (CRITICAL FIX)
+            // 🔥 SCROLL FIRST (CRITICAL)
             js.executeScript("arguments[0].scrollLeft = arguments[0].scrollWidth;", tableContainer);
 
-            // Small wait for rendering (needed in headless)
             Thread.sleep(1000);
 
-            // ---- STEP 2: WAIT FOR ROW ----
             WebElement row = wait.until(
                     ExpectedConditions.presenceOfElementLocated(
-                            By.xpath("//table/tbody/tr[1]")
-                    )
-            );
+                            By.xpath("//table/tbody/tr[1]")));
 
-            // ---- STEP 3: FIND BUTTON AFTER SCROLL ----
             WebElement button = row.findElement(By.xpath(".//button"));
 
-            // ---- STEP 4: SCROLL INTO VIEW (VERTICAL) ----
             js.executeScript("arguments[0].scrollIntoView({block:'center'});", button);
-
-            // ---- STEP 5: CLICK USING JS ----
             js.executeScript("arguments[0].click();", button);
 
-            // ---- CONFIRM ----
             WebElement confirmBtn = wait.until(
                     ExpectedConditions.presenceOfElementLocated(
-                            By.xpath("//button[normalize-space()='Confirm']")
-                    )
-            );
+                            By.xpath("//button[normalize-space()='Confirm']")));
 
             js.executeScript("arguments[0].click();", confirmBtn);
 
             System.out.println("✅ Partner " + i + " set to OFFLINE");
 
-            // ---- WAIT FOR TABLE REFRESH ----
             wait.until(ExpectedConditions.stalenessOf(row));
         }
     }
 
     @AfterTest
     public void teardown() {
+
+        // ---------- TAKE SCREENSHOT FOR CI ----------
+        try {
+            File src = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
+            src.renameTo(new File("screenshot.png"));
+            System.out.println("📸 Screenshot captured");
+        } catch (Exception e) {
+            System.out.println("Screenshot failed");
+        }
+
         if (driver != null) {
             driver.quit();
         }
